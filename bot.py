@@ -4,8 +4,8 @@ import json
 import wikipedia
 import time
 
-token = open('bot_token.txt')
-bot = telebot.TeleBot(token.read())
+token = '873712743:AAGcm-LpRtGTSefr81H9ZrYqRR7JrBUDzA8'
+bot = telebot.TeleBot(token)
 
 keyboard_help = telebot.types.ReplyKeyboardMarkup(True)
 keyboard_help.row('/start', '/help', '/revers', '/translate')
@@ -112,6 +112,7 @@ def send_text(message):
                 break
             if langs_name[ir] == text_lang:
                 lang = langs[ir]
+                break
             ir += 1 
         if ind == False:
             text = message.text[9:(len(message.text) - endword)] 
