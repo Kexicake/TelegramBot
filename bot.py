@@ -23,11 +23,8 @@ def opr_message(message):
 @bot.message_handler(content_types=['text'])
 def send_text(message): 
     bot1.log(message)
-    if message.text[:9] == 'Переверни':
-        if len(message.text) < 11:
-            bot1.sendMes(message, 'Вы не ввели слово!')
-        else:
-            bot1.sendMes(message, bot1.revers(message.text[9::]))
+    if message.text[0] == '/':
+        bot1.command(message)
     elif  message.text[:8] == 'Переведи':
         if len(message.text) < 10:
             bot1.sendMes(message, 'Вы не ввели слово!')
@@ -36,8 +33,11 @@ def send_text(message):
     elif _opredelenieB == True:
         wikipedia.set_lang("ru")
         bot.send_message(message.chat.id, wikipedia.summary(message.text, sentences = 2))   
-    elif message.text[0] == '/':
-        bot1.command(message)
+    elif message.text[:9] == 'Переверни':
+        if len(message.text) < 11:
+            bot1.sendMes(message, 'Вы не ввели слово!')
+        else:
+            bot1.sendMes(message, bot1.revers(message.text[9::]))
     else:
         bot.send_message(message.chat.id, 'Я тебя не понимаю(')
 
