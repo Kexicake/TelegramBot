@@ -1,8 +1,6 @@
-import telebot
-import requests 
-import json
-import wikipedia
-import time
+import telebot, requests, json, wikipedia, time, adodbapi
+
+from tel_bot import Tel_bot
 
 token = '873712743:AAGcm-LpRtGTSefr81H9ZrYqRR7JrBUDzA8'
 bot = telebot.TeleBot(token)
@@ -21,6 +19,8 @@ langs_name = ['на английский', 'на немецкий', 'на тат
 _reversB = False
 _opredelenieB = False
 
+bot1 = Tel_bot(token)
+
 def log(message):
     history = open('history.txt', 'a')
     history.write( '@' + str(message.chat.username) + ' ' + str(message.chat.id) + ' ' + str(message.from_user.first_name) + ' ' + str(message.content_type) + ' - ' + str(message.text) + ' ' + time.ctime() + '\n')
@@ -36,29 +36,33 @@ def revers(text):
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    log(message)
+    bot1.log(message)
     f = open('start.txt', 'r')
     bot.send_message(message.chat.id,  f.read(), reply_markup=keyboard1)
     f.close()
 
+@bot.message_handler(commands=[''])
+def command_message(message):
+    bot1.command(message)
+
 
 @bot.message_handler(commands=['help'])
 def help_message(message):
-    log(message)
+    bot1.log(message)
     f = open('help.txt', 'r')
     bot.send_message(message.chat.id,  f.read(), reply_markup=keyboard_help)
     f.close()
 
 @bot.message_handler(commands=['version'])
 def version_message(message):
-    log(message)
+    bot1.log(message)
     f = open('version.txt', 'r')
     bot.send_message(message.chat.id,  f.read(), reply_markup=keyboard_help)
     f.close()
 
 @bot.message_handler(commands=['revers'])
 def revers_message(message):
-    log(message)
+    bot1.log(message)
     global _reversB
     if _reversB == False:
         _reversB = True
@@ -69,7 +73,7 @@ def revers_message(message):
 
 @bot.message_handler(commands=['opr'])
 def opr_message(message):
-    log(message)
+    bot1.log(message)
     global _opredelenieB
     if _opredelenieB == False:
         _opredelenieB = True
@@ -82,7 +86,7 @@ def opr_message(message):
 def send_text(message): 
     global _reversB, words
     words = message
-    log(message)
+    bot1.log(message)
     if _reversB == True:
         bot.send_message(message.chat.id, revers(message.text))
     elif  message.text[:8] == 'Переведи':
@@ -127,18 +131,20 @@ def send_text(message):
     elif _opredelenieB == True:
         wikipedia.set_lang("ru")
         bot.send_message(message.chat.id, wikipedia.summary(message.text, sentences = 2))   
+    elif message.text[0] == '/':
+        bot1.command(message)
     else:
         bot.send_message(message.chat.id, 'Я тебя не понимаю(')
 
     
 @bot.message_handler(content_types=['sticker'])
 def sticker_id(message):
-    log(message)
+    bot1.log(message)
     bot.send_message(message.chat.id, message)
 
 @bot.message_handler(content_types=['audio'])
 def handle_audio(message):
-    log(message)
+    bot1.log(message)
     bot.send_message(message.chat.id,'Норм музочка)')
 
 
