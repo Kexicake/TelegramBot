@@ -20,53 +20,38 @@ class Tel_bot:
         elif message.text == '/start':
             f = open('start.txt', 'r')
             self.bot.send_message(message.chat.id, f.read(), reply_markup=keyboard1)
+            f.close()
         elif message.text == '/version':
             self.log(message)
             f = open('version.txt', 'r')
             self.bot.send_message(message.chat.id, f.read(), reply_markup=keyboard_help)
+            f.close()
         elif message.text == '/help':
             f = open('help.txt', 'r')
             self.bot.send_message(message.chat.id, f.read(), reply_markup=keyboard_help)
+            f.close()
         else:
             text = 'bad'
             self.sendMes(message, text)
-        f.close()
+        
 
     def translate(self,message):
-        url = 'https://translate.yandex.net/api/v1.5/tr.json/translate?' 
-        key = 'trnsl.1.1.20200420T153840Z.c64aa64b1ef12707.339289160fc33c01cc0c66ce2604c7200714bf48' 
+        translating = ['https://translate.yandex.net/api/v1.5/tr.json/translate?', 'trnsl.1.1.20200420T153840Z.c64aa64b1ef12707.339289160fc33c01cc0c66ce2604c7200714bf48', 'ru-en' ]  
         langs = ['ru-en','ru-de' ,'ru-tt' ,'ru-uk']
         langs_name = ['на английский', 'на немецкий', 'на татарский', 'на украинский']
-        message_revers = message.text[::-1]
-        endword = 0
-        count = 0
-        indicator = False
-        while indicator == False:
-            if message_revers[endword] == ' ':
-                count += 1
-            if count == 2:
-                indicator = True
-            endword += 1
-        endword -= 1
-        temp = message_revers[:endword]
-        text_lang = temp[::-1] 
-        ir = 0
-        lang = ''
-        ind = False
-        while ir <= len(langs_name):
-            if ir == len(langs_name):
-                self.sendMes(message, 'Такого языка ещё нет в базе или он не существует!')
-                ind = True
-                break
-            if langs_name[ir] == text_lang:
-                lang = langs[ir]
-                break
-            ir += 1 
-        if ind == False:
-            text = message.text[9:(len(message.text) - endword)] 
-            reque = requests.get(url, data={'key': key, 'text': text, 'lang': lang})
-            translated = reque.json()
-            self.sendMes(message, translated["text"])
+        lang_num = 12
+        lang_mes = ''
+        if message.text[9:12] == "на ":
+            while True:
+                if message.text[lang_num] == ' ':
+                    break
+                lang_mes += message.text[lang_num]
+
+        self.sendMes(message, message.text[9::12])
+            #text = message.text[9:(len(message.text) - endword_count)] 
+            #reque = requests.get(translating[0], data={'key': translating[1], 'text': text, 'lang': translating[2]})
+            #translated = reque.json()
+            #self.sendMes(message, translated["text"])
 
 #Я знаю что можно написать list[::-1]
     def revers(self, text):

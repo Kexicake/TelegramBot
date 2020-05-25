@@ -25,7 +25,7 @@ def send_text(message):
     bot1.log(message)
     if message.text[0] == '/':
         bot1.command(message)
-    elif  message.text[:8] == 'Переведи':
+    elif  message.text[:8] == 'Переведи' or message.text[:8] == 'переведи':
         if len(message.text) < 10:
             bot1.sendMes(message, 'Вы не ввели слово!')
         else:
