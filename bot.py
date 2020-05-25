@@ -30,9 +30,11 @@ def send_text(message):
             bot1.sendMes(message, 'Вы не ввели слово!')
         else:
             bot1.translate(message)
-    elif _opredelenieB == True:
-        wikipedia.set_lang("ru")
-        bot.send_message(message.chat.id, wikipedia.summary(message.text, sentences = 2))   
+    elif message.text[:9] == 'Что такое':
+        if len(message.text) < 11:
+            bot1.sendMes(message, 'Вы не ввели слово!')
+        else:
+            bot1.opr(message)
     elif message.text[:9] == 'Переверни':
         if len(message.text) < 11:
             bot1.sendMes(message, 'Вы не ввели слово!')
