@@ -1,10 +1,14 @@
-import telebot, requests, json, wikipedia, time, adodbapi, PyMySQL
+import logging
+import requests
+import telebot
+import wikipedia
+
 
 class Tel_bot:
-    def __init__(self,token):
-        """Constructor"""
-        self.bot = telebot.TeleBot(token)
-        print('\n-----------------------------\n\nConstruction complit!')
+    def __init__(self, token):
+       """Constructor"""
+       self.bot = telebot.TeleBot(token)
+       print('\n-----------------------------\n\nConstruction complit!')
 
     def sendMes(self, message, text):
         self.bot.send_message(message.chat.id, text)
@@ -12,29 +16,31 @@ class Tel_bot:
     def command(self, message):
         keyboards = [telebot.types.ReplyKeyboardMarkup(True), telebot.types.ReplyKeyboardMarkup(True)]
         keyboards[0].row('/start', '/help', '/revers', '/translate')
-        keyboards[1].row('/help')
-
+        q = True
         self.log(message)
+
         if message.text == '/test':
             text = 'test pass'
+            q = False
             self.bot.send_message(message.chat.id, text, reply_markup=keyboards[0])
-        elif message.text == '/start':
-            f = open('start.txt', 'r')
-            self.bot.send_message(message.chat.id, f.read(), reply_markup=keyboards[0])
-        elif message.text == '/version':
-            self.log(message)
-            f = open('version.txt', 'r')
-            self.bot.send_message(message.chat.id, f.read(), reply_markup=keyboards[1])
-        elif message.text == '/help':
-            f = open('help.txt', 'r')
-            self.bot.send_message(message.chat.id, f.read(), reply_markup=keyboards[1])
-        else:
-            return
-        f.close()
+
+        if q:
+            try:
+                text = message.text[1:] + '.txt'
+                f = open(text)
+                self.bot.send_message(message.chat.id, f.read())
+                f.close()
+            except:
+                self.sendMes(message, 'Я не знаю такую команду(')
+
+
         
     def opr(self, message):
         wikipedia.set_lang("ru")
-        self.sendMes(message, wikipedia.summary(message.text[9::], sentences = 2))
+        try:
+            self.sendMes(message, wikipedia.summary(message.text[9::], sentences=2))
+        except:
+            self.sendMes(message, 'Хмм... почему-то не могу выполнить запрос, попробуйнаписать по другому.')
 
     def translate(self,message):
         translating = ['https://translate.yandex.net/api/v1.5/tr.json/translate?', 'trnsl.1.1.20200420T153840Z.c64aa64b1ef12707.339289160fc33c01cc0c66ce2604c7200714bf48', 'ru-en' ]  
@@ -76,7 +82,6 @@ class Tel_bot:
         return message_revers
     
     def log(self, message):
-        history = open('history.txt', 'a')
+        logging.basicConfig(level=logging.INFO, filename='log.log', format='%(asctime)s -%(message)s', datefmt='%d-%b-%y %H:%M:%S')
+        logging.info(' @' + str(message.chat.username) + ' chatID: ' + str(message.chat.id) + ' username: ' + str(message.from_user.first_name) + ' ' + str(message.content_type) + ' - massage: ' + str(message.text) )
         print('\n-----------------------------\n\nMessage {1} from {0}\n'.format(message.from_user.first_name, message.text))
-        history.write( '@' + str(message.chat.username) + ' ' + str(message.chat.id) + ' ' + str(message.from_user.first_name) + ' ' + str(message.content_type) + ' - ' + str(message.text) + ' ' + time.ctime() + '\n')
-        history.close()

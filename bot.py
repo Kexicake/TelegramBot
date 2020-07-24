@@ -1,13 +1,11 @@
-import telebot, requests, json, wikipedia, time, adodbapi
+import telebot
 
 from tel_bot import Tel_bot
 
 token = '873712743:AAGcm-LpRtGTSefr81H9ZrYqRR7JrBUDzA8'
 bot = telebot.TeleBot(token)
-
-_opredelenieB = False
-
 bot1 = Tel_bot(token)
+_opredelenieB = False
 
 @bot.message_handler(commands=['opr'])
 def opr_message(message):
@@ -19,6 +17,7 @@ def opr_message(message):
     else:
         _opredelenieB = False
         bot.send_message(message.chat.id, 'Dicshinory off')
+
 
 @bot.message_handler(content_types=['text'])
 def send_text(message): 
@@ -43,7 +42,7 @@ def send_text(message):
     else:
         bot.send_message(message.chat.id, 'Я тебя не понимаю(')
 
-    
+"""  
 @bot.message_handler(content_types=['sticker'])
 def sticker_id(message):
     bot1.log(message)
@@ -53,6 +52,6 @@ def sticker_id(message):
 def handle_audio(message):
     bot1.log(message)
     bot.send_message(message.chat.id,'Норм музочка)')
-
+"""
 
 bot.polling()
