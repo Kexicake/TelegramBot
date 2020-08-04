@@ -1,4 +1,7 @@
 {
+    "Bot":{
+        "Token":"873712743:AAGcm-LpRtGTSefr81H9ZrYqRR7JrBUDzA8"
+    },
     "OpenWeather":{
         "city_id":479119,
         "appid":"85ae417a76658d629dc00302684a4cf5"
@@ -6,5 +9,6 @@
     "Translater":{
         "key":"trnsl.1.1.20200420T153840Z.c64aa64b1ef12707.339289160fc33c01cc0c66ce2604c7200714bf48"
     }
+
     
 }
