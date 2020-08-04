@@ -30,7 +30,7 @@ def send_text(message):
         else:
             bot.bot.send_message(message.chat.id, message.text[:9:-1])
     else:
-        bot.send_message(message.chat.id, 'Я тебя не понимаю(')
+        bot.bot.send_message(message.chat.id, 'Я тебя не понимаю(')
 
 """  
 @bot.message_handler(content_types=['sticker'])

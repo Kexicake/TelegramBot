@@ -52,7 +52,6 @@ class Tel_bot:
         translated = reque.json()
         self.bot.send_message(message.chat.id, translated["text"])
 
-  
     def log(self, message):
         logging.basicConfig(level=logging.INFO, filename='log.log', format='%(asctime)s -%(message)s', datefmt='%d-%b-%y %H:%M:%S')
         logging.info(' @' + str(message.chat.username) + ' chatID: ' + str(message.chat.id) + ' username: ' + str(message.from_user.first_name) + ' ' + str(message.content_type) + ' - massage: ' + str(message.text))
