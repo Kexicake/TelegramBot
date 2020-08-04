@@ -1,5 +1,5 @@
 import telebot
-
+import json
 from bot import Tel_bot
 
 token = '873712743:AAGcm-LpRtGTSefr81H9ZrYqRR7JrBUDzA8'
@@ -38,7 +38,7 @@ def send_text(message):
         if len(message.text) < 11:
             bot1.sendMes(message, 'Вы не ввели слово!')
         else:
-            bot1.sendMes(message, bot1.revers(message.text[9::]))
+            bot1.sendMes(message, message.text[:9:-1])
     else:
         bot.send_message(message.chat.id, 'Я тебя не понимаю(')
 

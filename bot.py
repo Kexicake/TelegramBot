@@ -4,6 +4,9 @@ import requests
 import telebot
 import wikipedia
 
+import json
+
+
 
 class Tel_bot:
     def __init__(self, token):
@@ -17,7 +20,7 @@ class Tel_bot:
 
     def command(self, message):
         keyboards = [telebot.types.ReplyKeyboardMarkup(True), telebot.types.ReplyKeyboardMarkup(True)]
-        keyboards[0].row('/start', '/help', '/revers', '/translate')
+        keyboards[0].row('/start', '/help')
         q = True
         self.log(message)
 
@@ -29,9 +32,8 @@ class Tel_bot:
         if q:
             try:
                 text = message.text[1:] + '.txt'
-                f = open(text)
-                self.bot.send_message(message.chat.id, f.read())
-                f.close()
+                with open(text, 'r', encoding='utf-8') as fh: #открываем файл на чтение
+                    self.bot.send_message(message.chat.id, fh.read())   
             except:
                 self.sendMes(message, 'Я не знаю такую команду(')
 
@@ -43,9 +45,11 @@ class Tel_bot:
             self.sendMes(message, 'Хмм... почему-то не могу выполнить запрос, попробуйнаписать по другому.')
 
     def translate(self, message):
-        translating = ['https://translate.yandex.net/api/v1.5/tr.json/translate?',
-                       'trnsl.1.1.20200420T153840Z.c64aa64b1ef12707.339289160fc33c01cc0c66ce2604c7200714bf48',
-                       'ru-en']
+
+        with open('config.json', 'r', encoding='utf-8') as fh: #открываем файл на чтение
+            config = json.load(fh) #загружаем из файла данные в словарь 
+
+        lang = 'ru-en'
         langs = (('ru-en', 'ru-de', 'ru-tt', 'ru-uk'), ('английский', 'немецкий', 'татарский', 'украинский'))
         lang_num = 12
         lang_mes = ''
@@ -64,25 +68,19 @@ class Tel_bot:
                     self.sendMes(message, "ERROR: Языка не существует или его нет в базе")
                     return
                 if langs[1][i] == lang_mes:
-                    translating[2] = langs[0][i]
+                    lang = langs[0][i]
                     break
         else:
             lang_num = 9
 
-        reque = requests.get(translating[0],
-                             data={'key': translating[1], 'text': message.text[lang_num::], 'lang': translating[2]})
+        reque = requests.get('https://translate.yandex.net/api/v1.5/tr.json/translate?',
+                             data={'key': config['Translater']['key'], 'text': message.text[lang_num::], 'lang': lang})
         translated = reque.json()
         self.sendMes(message, translated["text"])
 
-    # Я знаю что можно написать list[::-1]
-    def revers(self, text):
-        message_revers = ''
-        i = len(text)
-        while i > 0:
-            i -= 1
-            message_revers += text[i]
-        return message_revers
 
+
+  
     def log(self, message):
         logging.basicConfig(level=logging.INFO, filename='log.log', format='%(asctime)s -%(message)s',
                             datefmt='%d-%b-%y %H:%M:%S')
