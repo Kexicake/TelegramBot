@@ -3,6 +3,7 @@ import requests
 import telebot
 import wikipedia
 import json
+import time
 
 class Tel_bot:   
     def __init__(self, token):
@@ -51,6 +52,31 @@ class Tel_bot:
                              data={'key': self.config['Translater']['key'], 'text': text, 'lang': lang})
         translated = reque.json()
         self.bot.send_message(message.chat.id, translated["text"])
+
+    def weather(self, message):
+        try:
+            res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
+                       params={'id': self.config['OpenWeather']['city_id'], 'units': 'metric', 'lang': 'ru', 'APPID': self.config['OpenWeather']['appid']})
+            data = res.json()
+
+    
+            tim = time.strftime('%H')
+            for i in range(22):
+                if i >= int(tim) and i%3==0:
+                    if len(str(i)) == 1:
+                        tim = '0{0}'.format(str(i))
+                    else:
+                        tim = str(i)
+                    break
+                if i == 21:
+                    tim = '00'
+
+            for i in data['list']:
+                if i['dt_txt'][11:13] == tim:
+                    self.bot.send_message(message.chat.id,'В ульяновске сейчас:\n{0:+3.0f} {1}'.format(i['main']['temp'],i['weather'][0]['description']))
+                    break
+        except:
+            self.bot.send_message(message.chat.id, 'Ой...\n Что-то пошло не так...')
 
     def log(self, message):
         logging.basicConfig(level=logging.INFO, filename='log.log', format='%(asctime)s -%(message)s', datefmt='%d-%b-%y %H:%M:%S')

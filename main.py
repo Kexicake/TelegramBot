@@ -7,7 +7,7 @@ with open('config.json', 'r', encoding='utf-8') as fh: #открываем фа�
 
 
 bot = Tel_bot(config['Bot']['Token'])
-
+    
 
 @bot.bot.message_handler(content_types=['text'])
 def send_text(message): 
@@ -29,6 +29,8 @@ def send_text(message):
             bot.bot.send_message(message.chat.id, 'Вы не ввели слово!')
         else:
             bot.bot.send_message(message.chat.id, message.text[:9:-1])
+    elif message.text == 'Погода':
+        bot.weather(message)
     else:
         bot.bot.send_message(message.chat.id, 'Я тебя не понимаю(')
 
