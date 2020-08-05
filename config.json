@@ -4,6 +4,7 @@
     },
     "OpenWeather":{
         "city_id":479119,
+        "city":"Ульяновск",
         "appid":"85ae417a76658d629dc00302684a4cf5"
     },
     "Translater":{
