@@ -1,9 +1,4 @@
-import logging
-import requests
-import telebot
-import wikipedia
-import json
-import time
+import logging, requests, telebot, wikipedia, json, time
 
 class Tel_bot:   
     def __init__(self, token):
@@ -80,5 +75,5 @@ class Tel_bot:
 
     def log(self, message):
         logging.basicConfig(level=logging.INFO, filename='log.log', format='%(asctime)s -%(message)s', datefmt='%d-%b-%y %H:%M:%S')
-        logging.info(' @' + str(message.chat.username) + ' chatID: ' + str(message.chat.id) + ' username: ' + str(message.from_user.first_name) + ' ' + str(message.content_type) + ' - massage: ' + str(message.text))
+        logging.info(' @{0} chatID:{1}  username:{2} {3}  - massage: {4}'.format(str(message.chat.username), str(message.chat.id), str(message.from_user.first_name), str(message.content_type), str(message.text)))
         print('\n\nMessage {1} from {0}\n\n-----------------------------'.format(message.from_user.first_name, message.text), end='')
