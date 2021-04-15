@@ -14,25 +14,31 @@ def send_text(message):
     bot.log(message)
     if message.text[0] == '/':
         bot.command(message)
+
     elif  message.text[:8] == 'Переведи' or message.text[:8] == 'переведи':
         if len(message.text) < 10:
             bot.send(message.chat.id, 'Вы не ввели слово!')
         else:
             bot.translate(message)
+
     elif message.text[:9] == 'Что такое':
         if len(message.text) < 11:
            bot.send(message.chat.id, 'Вы не ввели слово!')
         else:
             bot.definition(message)
+
     elif message.text[:9] == 'Переверни':
         if len(message.text) < 11:
             bot.send(message.chat.id, 'Вы не ввели слово!')
         else:
             bot.send(message.chat.id, message.text[:9:-1])
+
     elif message.text == 'Погода':
         bot.weather(message)
-    elif message.text[:3] == 'sms':
+
+    elif message.text[:3] == 'sms': 
         bot.sms(message.text[4::],message)
+
     else:
         bot.send(message.chat.id, 'Я тебя не понимаю(')
 

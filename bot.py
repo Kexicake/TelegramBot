@@ -5,13 +5,16 @@ class Tel_bot:
         """Constructor"""
         with open('config.json', 'r', encoding='utf-8') as fh: #открываем файл на чтение
             self.config = json.load(fh) #загружаем из файла данные в словарь 
+
         self.bot = telebot.TeleBot(self.config['Bot']['Token']) #подключаем бота
         print("-----------------------------\n\nConstruction complit!\n\n-----------------------------", end='')
 
     def send(self,id,message):
+        """Упращение отправки сообщений ботом"""
             self.bot.send_message(id,message)
 
     def command(self, message):
+        """Обработчик команд поступающих боту"""
         keyboards = [telebot.types.ReplyKeyboardMarkup(True), telebot.types.ReplyKeyboardMarkup(True)]
         keyboards[0].row('/start', '/help')
 
@@ -27,6 +30,7 @@ class Tel_bot:
                 self.send(message.chat.id, 'Я не знаю такую команду(')
 
     def definition(self, message):
+        """Сталья из википедии на заданную тему"""
         wikipedia.set_lang("ru")
         try:
             self.send(message.chat.id, wikipedia.summary(message.text[9::], sentences=2))
@@ -34,6 +38,8 @@ class Tel_bot:
             self.send(message.chat.id, 'Хмм...\n почему-то не могу выполнить запрос, попробуй написать по другому :(')
 
     def translate(self, message):
+        """Перевед слов с одного языка на другой"""
+        # Допилить выбор языка(вроде я делал это, хммм)
         lang = 'ru-en'
         langs = (('ru-en', 'ru-de',  'ru-uk'), ('на английский', 'на немецкий', 'на украинский'),(13, 11, 13))
         len_lang = 0
@@ -52,6 +58,8 @@ class Tel_bot:
         self.send(message.chat.id, translated["text"])
 
     def weather(self, message):
+        """Погода"""
+        # Допилить выбор города 
         try:
             res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
                        params={'id': self.config['OpenWeather']['city_id'], 'units': 'metric', 'lang': 'ru', 'APPID': self.config['OpenWeather']['appid']})
@@ -74,6 +82,8 @@ class Tel_bot:
             self.send(message.chat.id, 'Ой...\n Что-то пошло не так...')
 
     def sms(self, message,me):
+        """Функция отправки сообщеня ботом какому либо пользователю"""
+        # Добавить возможность отправки по нику
         id=''
         id_b = True
         temp = ''
@@ -99,6 +109,8 @@ class Tel_bot:
             self.send(me.chat.id, 'Мне ещё не писал такой юзер(')
 
     def log(self, message):
+        """Логорование"""
+        # Добавить функцию добавления новых пользователей в бд
         logging.basicConfig(level=logging.INFO, filename='log.log', format='%(asctime)s -%(message)s', datefmt='%d-%b-%y %H:%M:%S')
         logging.info(' @{0} chatID:{1}  username:{2} {3}  - massage: {4}'.format(str(message.chat.username), str(message.chat.id), str(message.from_user.first_name), str(message.content_type), str(message.text)))
         print('\n\nMessage {1} from {0}\n\n-----------------------------'.format(message.from_user.first_name, message.text), end='')
