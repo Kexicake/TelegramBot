@@ -73,7 +73,7 @@ class Tel_bot:
         except:
             self.send(message.chat.id, 'Ой...\n Что-то пошло не так...')
 
-    def sms(self, message):
+    def sms(self, message,me):
         id=''
         id_b = True
         temp = ''
@@ -90,11 +90,16 @@ class Tel_bot:
         temp.reverse()
         id.reverse()
         id = message.join(id)
-        message = message.join(temp)
-        print(message)
-        print(id)
+        message = message.join(temp) + ' from {0}'.format(str(me.from_user.first_name))
+        with open('users.json', 'r', encoding='utf-8') as fh: #открываем файл на чтение
+            users = json.load(fh) #загружаем из файла данные в словарь 
+        try:
+            self.send(int(users[id]),message)
+        except:
+            self.send(me.chat.id, 'Мне ещё не писал такой юзер(')
 
     def log(self, message):
         logging.basicConfig(level=logging.INFO, filename='log.log', format='%(asctime)s -%(message)s', datefmt='%d-%b-%y %H:%M:%S')
         logging.info(' @{0} chatID:{1}  username:{2} {3}  - massage: {4}'.format(str(message.chat.username), str(message.chat.id), str(message.from_user.first_name), str(message.content_type), str(message.text)))
         print('\n\nMessage {1} from {0}\n\n-----------------------------'.format(message.from_user.first_name, message.text), end='')
+        

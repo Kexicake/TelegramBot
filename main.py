@@ -32,7 +32,7 @@ def send_text(message):
     elif message.text == 'Погода':
         bot.weather(message)
     elif message.text[:3] == 'sms':
-        bot.sms(message.text[4::])
+        bot.sms(message.text[4::],message)
     else:
         bot.send(message.chat.id, 'Я тебя не понимаю(')
 
